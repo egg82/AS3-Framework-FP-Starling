@@ -12,6 +12,8 @@ package egg82.custom {
 	 * @author Alex
 	 */
 	
+	 //TODO Finish CustomButton
+	
 	public class CustomButton extends Image {
 		//vars
 		public static const OBSERVERS:Vector.<Observer> = new Vector.<Observer>();
@@ -23,7 +25,7 @@ package egg82.custom {
 		private var overState:Texture = null;
 		
 		//constructor
-		public function CustomButton(upState:String, downState:String = null, overState:String = null) {
+		public function CustomButton(upStateUrl:String = null, downStateUrl:String = null, overStateUrl:String = null) {
 			super(upState);
 			touchable = true;
 		}

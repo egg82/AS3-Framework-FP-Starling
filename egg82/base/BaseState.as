@@ -36,16 +36,34 @@ package egg82.base {
 	
 	public class BaseState extends BaseSprite {
 		//vars
+		/**
+		 * Observers for this class.
+		 */
 		public static const OBSERVERS:Vector.<Observer> = new Vector.<Observer>();
 		
 		public var active:Boolean = true;
 		public var forceUpdate:Boolean = false;
 		
+		/**
+		 * The state before this one.
+		 */
 		protected var _prevState:Class;
+		/**
+		 * Optional _prevState params.
+		 */
 		protected var _prevStateParams:Array;
+		/**
+		 * The state after this one.
+		 */
 		protected var _nextState:Class;
+		/**
+		 * Optional _nextState params.
+		 */
 		protected var _nextStateParams:Array;
 		
+		/**
+		 * Easy access to the registry util.
+		 */
 		protected const REGISTRY_UTIL:IRegistryUtil = ServiceLocator.getService(ServiceType.REGISTRY_UTIL) as IRegistryUtil;
 		
 		private var _stateEngine:IStateEngine = ServiceLocator.getService(ServiceType.STATE_ENGINE) as IStateEngine;
@@ -61,6 +79,9 @@ package egg82.base {
 		}
 		
 		//private
+		/**
+		 * Goes to the defines _prevState with the defines _prevStateArgs.
+		 */
 		protected function prevState():void {
 			if (!_prevState) {
 				return;
@@ -70,6 +91,9 @@ package egg82.base {
 			
 			_stateEngine.swapStates(_prevState, _prevStateParams);
 		}
+		/**
+		 * Goes to the defines _nextState with the defines _nextStateArgs.
+		 */
 		protected function nextState():void {
 			if (!_nextState) {
 				return;

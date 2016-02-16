@@ -45,6 +45,9 @@ package egg82.custom {
 	
 	public class CustomTiledImage extends Image {
 		//vars
+		/**
+		 * Observers for this class.
+		 */
 		public static const OBSERVERS:Vector.<Observer> = new Vector.<Observer>();
 		
 		private var loader:ImageDecoder = new ImageDecoder();
@@ -71,6 +74,23 @@ package egg82.custom {
 		private var textureRegistry:IRegistry = ServiceLocator.getService(ServiceType.TEXTURE_REGISTRY) as IRegistry;
 		
 		//constructor
+		/**
+		 * Downloads an image, or uses the registry if the image has already been downloaded.
+		 * Then splits the image into "frames" (textures) via rows/columns and provides controls for those.
+		 * This is a large area full of tiles.
+		 * It takes the downloaded image, splits it into pieces, and puts those pieces in a single tile.
+		 * It then takes that tile and multiplies it rows * columns times to get a large square of individual tiles.
+		 * You are given control over the "frame"/texture of each tile.
+		 * Like a tile sheet. In fact, this <i>is</i> a tile sheet.
+		 * 
+		 * @param	url The image URL.
+		 * @param	atlasRows The rows (horizontal lines) to split the image on.
+		 * @param	atlasCols The columns (vertical lines) to split the image on.
+		 * @param	rows The number of rows (horizontal lines) this tile sheet has.
+		 * @param	cols The numbers of columns (vertical lines) this tile sheet has.
+		 * @param	tileWidth The width (in pixels) of each tile.
+		 * @param	tileHeight The height (in pixels) of each tile.
+		 */
 		public function CustomTiledImage(url:String, atlasRows:uint, atlasCols:uint, rows:uint, cols:uint, tileWidth:uint, tileHeight:uint) {
 			path2 = url.replace(/\W|_/g, "_");
 			this.atlasRows = atlasRows;
@@ -106,6 +126,9 @@ package egg82.custom {
 		}
 		
 		//public
+		/**
+		 * Destroys the object.
+		 */
 		public function destroy():void {
 			Observer.remove(ImageDecoder.OBSERVERS, imageDecoderObserver);
 			
@@ -119,6 +142,14 @@ package egg82.custom {
 			dispose();
 		}
 		
+		/**
+		 * Sets the "frame"/texture of an individual tile to a specified row/column.
+		 * 
+		 * @param	row The row of the tile to set.
+		 * @param	col The column of the tile to set.
+		 * @param	texRow The tile's "frame"/texture row.
+		 * @param	texCol The tile's "frame"/texture column.
+		 */
 		public function setTextureAt(row:uint, col:uint, texRow:uint, texCol:uint):void {
 			var xy:uint = MathUtil.toXY(cols, col, row);
 			
@@ -145,6 +176,13 @@ package egg82.custom {
 				(texture.base as flash.display3D.textures.Texture).uploadFromBitmapData(master);
 			}
 		}
+		/**
+		 * Get's the specified tile's current texture position.
+		 * 
+		 * @param	row The row of the tile to get.
+		 * @param	col The column of the tile to get.
+		 * @return The texture's egg82.util.MathUtil.toXY() position.
+		 */
 		public function getTextureAt(row:uint, col:uint):uint {
 			var xy:uint = MathUtil.toXY(cols, col, row);
 			
@@ -157,9 +195,15 @@ package egg82.custom {
 			return MathUtil.toXY(atlasCols, retP.x + 1, retP.y + 1);
 		}
 		
+		/**
+		 * Locks the tile sheet. If any changes are made to the tiles while locked, they will not be reflected.
+		 */
 		public function lock():void {
 			_locked = true;
 		}
+		/**
+		 * Unlocks and updates the tile sheet. If any changes are made to the tiles while locked, they will not be reflected.
+		 */
 		public function unlock():void {
 			if (!_locked) {
 				return;
@@ -168,10 +212,16 @@ package egg82.custom {
 			_locked = false;
 			redraw();
 		}
+		/**
+		 * Boolean flag indicating whether or not the tile sheet is locked. If any changes are made to the tiles while locked, they will not be reflected.
+		 */
 		public function get locked():Boolean {
 			return _locked;
 		}
 		
+		/**
+		 * Forces the tile sheet to redraw itself, even if locked.
+		 */
 		public function redraw():void {
 			if (!master) {
 				return;
@@ -197,13 +247,22 @@ package egg82.custom {
 			(texture.base as flash.display3D.textures.Texture).uploadFromBitmapData(master);
 		}
 		
+		/**
+		 * Boolean flag indicating whether or not the texture has been loaded successfully.
+		 */
 		public function get isLoaded():Boolean {
 			return _isLoaded;
 		}
 		
+		/**
+		 * The number of tiles the downloaded image has in total.
+		 */
 		public function get numAtlasTiles():uint {
 			return atlasRows * atlasCols;
 		}
+		/**
+		 * The number of tiles this sheet has in total.
+		 */
 		public function get numTiles():uint {
 			return rows * cols;
 		}
@@ -270,7 +329,13 @@ package egg82.custom {
 			nullBMD = TextureUtil.resizeBMD(textureRegistry.getRegister("null_bmd") as BitmapData, tileWidth, tileHeight);
 		}
 		
-		private function dispatch(event:String, data:Object = null):void {
+		/**
+		 * Dispatches an event.
+		 * 
+		 * @param	event The event's type.
+		 * @param	data The event's data.
+		 */
+		protected function dispatch(event:String, data:Object = null):void {
 			Observer.dispatch(OBSERVERS, this, event, data);
 		}
 	}

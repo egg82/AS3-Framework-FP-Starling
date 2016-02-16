@@ -48,6 +48,9 @@ package egg82.custom {
 	
 	public class CustomAtlasImage extends Image {
 		//vars
+		/**
+		 * Observers for this class.
+		 */
 		public static const OBSERVERS:Vector.<Observer> = new Vector.<Observer>();
 		
 		private var loader:ImageDecoder = new ImageDecoder();
@@ -74,6 +77,16 @@ package egg82.custom {
 		private var registryUtil:IRegistryUtil = ServiceLocator.getService(ServiceType.REGISTRY_UTIL) as IRegistryUtil;
 		
 		//constructor
+		/**
+		 * Downloads an image, or uses the registry if the image has already been downloaded.
+		 * Then splits the image into "frames" (textures) and provides controls for those.
+		 * You can split the image via XML or rows/columns. XML files are also kept if downloaded.
+		 * 
+		 * @param	url The image URL.
+		 * @param	xmlUrl Optional. The XML URL.
+		 * @param	atlasRows Optional. The rows (horizontal lines) to split the image on.
+		 * @param	atlasCols Optional. The columns (vertical lines) to split the image on.
+		 */
 		public function CustomAtlasImage(url:String, xmlUrl:String = null, atlasRows:uint = 0, atlasCols:uint = 0) {
 			var texture:Texture = registryUtil.getTexture("null");
 			super(texture);
@@ -141,12 +154,18 @@ package egg82.custom {
 		}
 		
 		//public
+		/**
+		 * Creates the object. Use this instead of constructors.
+		 */
 		public function create():void {
 			if (_isLoaded) {
 				dispatch(CustomAtlasImageEvent.COMPLETE);
 			}
 		}
 		
+		/**
+		 * Destroys the object.
+		 */
 		public function destroy():void {
 			var url:String;
 			
@@ -163,6 +182,16 @@ package egg82.custom {
 			dispose();
 		}
 		
+		/**
+		 * Downloads an image, or uses the registry if the image has already been downloaded.
+		 * Then splits the image into "frames" (textures) and provides controls for those.
+		 * You can split the image via XML or rows/columns. XML files are also kept if downloaded.
+		 * 
+		 * @param	url The image URL.
+		 * @param	xmlUrl Optional. The XML URL.
+		 * @param	atlasRows Optional. The rows (horizontal lines) to split the image on.
+		 * @param	atlasCols Optional. The columns (vertical lines) to split the image on.
+		 */
 		public function load(url:String, xmlUrl:String = null, atlasRows:uint = 0, atlasCols:uint = 0):void {
 			if (!url || url == "") {
 				throw new Error("url cannot be null.");
@@ -224,6 +253,13 @@ package egg82.custom {
 			}
 		}
 		
+		/**
+		 * Sets the current "frame"/texture from the row and column specified.
+		 * Useful for row/column split atlas.
+		 * 
+		 * @param	row The texture's row (top to bottom)
+		 * @param	col The texture's column (left to right)
+		 */
 		public function setTexture(row:uint, col:uint):void {
 			if (!atlas) {
 				return;
@@ -240,6 +276,12 @@ package egg82.custom {
 			
 			scaleX = scaleY = 1;
 		}
+		/**
+		 * Sets the current "frame"/texture from the name specified.
+		 * Useful for XML split atlas.
+		 * 
+		 * @param	name The texture's name.
+		 */
 		public function setTextureFromName(name:String):void {
 			if (!atlas) {
 				return;
@@ -255,6 +297,11 @@ package egg82.custom {
 			
 			readjustSize();
 		}
+		/**
+		 * Gets the current texture's position.
+		 * 
+		 * @return The egg82.util.MathUtil.toXY() position.
+		 */
 		public function getTextureXY():uint {
 			if (!atlas) {
 				return 0;
@@ -263,6 +310,9 @@ package egg82.custom {
 			return MathUtil.toXY(atlasCols, texCol, texRow);
 		}
 		
+		/**
+		 * Boolean flag indicating whether or not the texture and its altas (if any) have been loaded successfully.
+		 */
 		public function get isLoaded():Boolean {
 			return _isLoaded;
 		}
@@ -410,7 +460,13 @@ package egg82.custom {
 			}
 		}
 		
-		private function dispatch(event:String, data:Object = null):void {
+		/**
+		 * Dispatches an event.
+		 * 
+		 * @param	event The event's type.
+		 * @param	data The event's data.
+		 */
+		protected function dispatch(event:String, data:Object = null):void {
 			Observer.dispatch(OBSERVERS, this, event, data);
 		}
 	}

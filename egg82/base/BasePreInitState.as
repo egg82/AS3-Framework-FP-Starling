@@ -41,6 +41,9 @@ package egg82.base {
 		
 		private var centerText:TextField;
 		
+		/**
+		 * Easy access to the init registry.
+		 */
 		protected const INIT_REGISTRY:IRegistry = ServiceLocator.getService(ServiceType.INIT_REGISTRY) as IRegistry;
 		
 		//constructor
@@ -49,6 +52,11 @@ package egg82.base {
 		}
 		
 		//public
+		/**
+		 * Creates a quick loader on-screen, in case files need to be downloaded or something needs to happen externally.
+		 * @param	args Optional parameters:
+		 * url:String - The URL or path of the program. This is set by egg82.base.BasePreloader automatically.
+		 */
 		override public function create(args:Array = null):void {
 			super.create(args);
 			
@@ -73,6 +81,12 @@ package egg82.base {
 		}
 		
 		//private
+		/**
+		 * Manually set the loaded/total of the progress bar. This is required (in this specific class) if you want to use this feature.
+		 * 
+		 * @param	loaded
+		 * @param	total
+		 */
 		protected function setLoaded(loaded:uint, total:uint):void {
 			centerText.text = loadingString + "\n" + loaded + "/" + total + "\n" + ((loaded / total) * 100).toFixed(2) + "%";
 		}

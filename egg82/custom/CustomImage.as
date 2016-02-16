@@ -42,6 +42,9 @@ package egg82.custom {
 	
 	public class CustomImage extends Image {
 		//vars
+		/**
+		 * Observers for this class.
+		 */
 		public static const OBSERVERS:Vector.<Observer> = new Vector.<Observer>();
 		
 		private var loader:ImageDecoder = new ImageDecoder();
@@ -55,6 +58,11 @@ package egg82.custom {
 		private var registryUtil:IRegistryUtil = ServiceLocator.getService(ServiceType.REGISTRY_UTIL) as IRegistryUtil;
 		
 		//constructor
+		/**
+		 * Downloads an image, or uses the registry if the image has already been downloaded.
+		 * 
+		 * @param	url The image URL.
+		 */
 		public function CustomImage(url:String) {
 			var texture:Texture = registryUtil.getTexture("null");
 			super(texture);
@@ -89,12 +97,18 @@ package egg82.custom {
 		}
 		
 		//public
+		/**
+		 * Creates the object. Use this instead of constructors.
+		 */
 		public function create():void {
 			if (_isLoaded) {
 				dispatch(CustomImageEvent.COMPLETE);
 			}
 		}
 		
+		/**
+		 * Destroys the object.
+		 */
 		public function destroy():void {
 			var url:String;
 			
@@ -112,6 +126,9 @@ package egg82.custom {
 			//RegTextures.disposeBMD(name);
 		}
 		
+		/**
+		 * Boolean flag indicating whether or not the texture and its altas (if any) have been loaded successfully.
+		 */
 		public function get isLoaded():Boolean {
 			return _isLoaded;
 		}
@@ -189,6 +206,12 @@ package egg82.custom {
 			}
 		}
 		
+		/**
+		 * Dispatches an event.
+		 * 
+		 * @param	event The event's type.
+		 * @param	data The event's data.
+		 */
 		protected function dispatch(event:String, data:Object = null):void {
 			Observer.dispatch(OBSERVERS, this, event, data);
 		}

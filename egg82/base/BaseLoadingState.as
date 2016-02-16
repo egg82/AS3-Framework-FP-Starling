@@ -22,6 +22,9 @@ package egg82.base {
 	
 	public class BaseLoadingState extends BaseState {
 		//vars
+		/**
+		 * Observers for this class.
+		 */
 		public static const OBSERVERS:Vector.<Observer> = new Vector.<Observer>();
 		
 		private var font:String = "visitor";
@@ -53,6 +56,13 @@ package egg82.base {
 		}
 		
 		//public
+		/**
+		 * Downloads any files in the "fileArr" parameter. Call super() <i>after</i> you've actually compiled the array to download.
+		 * @param	args Required parameters:
+		 * fileArr:Array - The files to download
+		 * Optional parameters:
+		 * font:String - The font to use for the loading graphics
+		 */
 		override public function create(args:Array = null):void {
 			super.create(args);
 			
@@ -132,10 +142,22 @@ package egg82.base {
 		}
 		
 		//private
+		/**
+		 * Manually set the loaded/total files.
+		 * 
+		 * @param	loadedFiles The number of loaded files.
+		 * @param	totalFiles The total number of files to load.
+		 */
 		protected function setLoaded(loadedFiles:uint, totalFiles:uint):void {
 			centerText.text = loadingString + "\n" + loadedFiles + "/" + totalFiles + "\n" + ((loadedFiles / totalFiles) * 100).toFixed(2) + "%";
 		}
 		
+		/**
+		 * Manually decode an image.
+		 * 
+		 * @param	name The temporary identifier to give the image. Usually the URL.
+		 * @param	data The ByteArray of the image to decode.
+		 */
 		protected function decodeImage(name:String, data:ByteArray):void {
 			_totalDecodeFiles++;
 			setLoaded(_loadedFiles + _decodedFiles, _totalFiles + _totalDecodeFiles);
@@ -144,6 +166,9 @@ package egg82.base {
 			imageDecoders[imageDecoders.length - 1].decode(data, name);
 		}
 		
+		/**
+		 * Cancels all download/decode operations.
+		 */
 		protected function cancelAll():void {
 			var i:uint;
 			

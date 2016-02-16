@@ -35,6 +35,9 @@ package egg82.base {
 	
 	public class BasePreloader extends Sprite {
 		//vars
+		/**
+		 * Observers for this class.
+		 */
 		public static const OBSERVERS:Vector.<Observer> = new Vector.<Observer>();
 		
 		private var _loaded:Number = 0;
@@ -46,6 +49,14 @@ package egg82.base {
 		private var _postInitStateArgs:Array = null;
 		
 		//constructor
+		/**
+		 * Constructs the preloader.
+		 * 
+		 * @param	preInitState The state marked as the pre-init state.
+		 * @param	postInitState The state marked as the post-init state.
+		 * @param	preInitStateArgs Arguments to add to the pre-init state.
+		 * @param	postInitStateArgs Arguments to add to the post-init state.
+		 */
 		public function BasePreloader(preInitState:Class, postInitState:Class, preInitStateArgs:Array = null, postInitStateArgs:Array = null) {
 			if (!preInitState) {
 				throw new Error("preInitState cannot be null");
@@ -64,13 +75,22 @@ package egg82.base {
 		}
 		
 		//public
+		/**
+		 * Current bytes loaded.
+		 */
 		public function get loaded():Number {
 			return _loaded;
 		}
+		/**
+		 * Total bytes to load.
+		 */
 		public function get total():Number {
 			return _total;
 		}
 		
+		/**
+		 * Starts the game. You usually want to call this when the game is actually done loading.
+		 */
 		public function start():void {
 			addChild(new Start(_preInitState, _preInitStateArgs, _postInitState, _postInitStateArgs));
 		}
@@ -102,6 +122,12 @@ package egg82.base {
 			dispatch(BasePreloaderEvent.COMPLETE);
 		}
 		
+		/**
+		 * Dispatches an event.
+		 * 
+		 * @param	event The event's type.
+		 * @param	data The event's data.
+		 */
 		protected function dispatch(event:String, data:Object = null):void {
 			Observer.dispatch(OBSERVERS, this, event, data);
 		}
